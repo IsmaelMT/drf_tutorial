@@ -14,9 +14,19 @@ class IngredientField(serializers.RelatedField):
 class RecipeSerializer(serializers.ModelSerializer):
 
     ingredients = IngredientField(
+        required=True,
         many=True,
         queryset=models.Ingredient.objects.all()
     )
+
+    def validate_ingredients(self, value):
+
+        if len(value) == 0:
+            raise serializers.ValidationError(
+                "The ingredients list can't be empty"
+            )
+
+        return value
 
     def create(self, validated_data):
         ingredients = validated_data.pop("ingredients")
