@@ -3,7 +3,7 @@ import pytest
 from django.urls import reverse
 
 from rest_framework import status
-from rest_framework.test import APITestCase, RequestsClient
+from rest_framework.test import APITestCase
 
 from drf_tutorial.recipes import factories
 from drf_tutorial.api import serializers
@@ -62,18 +62,18 @@ class TestCRUD(APITestCase):
         assert response.status_code == status.HTTP_200_OK
         assert response.data == test_recipe_data
 
-    # def test_update_recipe(self):
-    #     assert True
-        # new_recipe = {
-        #     "name": self.test_recipe_1.name + "-edited",
-        #     "description": self.test_recipe_1.description + "-edited",
-        #     "ingredients": ["test-ingredient"]
-        # }
+    def test_update_recipe(self):
+        assert True
+        edit_recipe = {
+            "name": self.test_recipe_1.name + "-edited",
+            "description": self.test_recipe_1.description + "-edited",
+            "ingredients": ["test-ingredient"]
+        }
 
-        # response = self.client.patch(self.list_url, new_recipe)
-        # response_data = {k: v for k, v in response.data.items() if k != "id"}
+        response = self.client.patch(self.detail_url, edit_recipe)
+        response_data = {k: v for k, v in response.data.items() if k != "id"}
 
-        # assert response_data == new_recipe
+        assert response_data == edit_recipe
 
     def test_post_recipe(self):
 
@@ -96,18 +96,15 @@ class TestCRUD(APITestCase):
         assert len(response.data) == len(self.recipes)
 
     def test_required_ingredients(self):
-        api = RequestsClient()
-
         new_recipe = {
             "name": "Tortilla",
             "description": "Little tortilla boy",
         }
 
-        response = api.post(
+        response = self.client.post(
             "{}{}".format(self.hostname, self.list_url),
             json=new_recipe
         )
 
-        # Assert ingredients are required
+        # # Assert ingredients are required
         assert response.status_code == status.HTTP_400_BAD_REQUEST
-
