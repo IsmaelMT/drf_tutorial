@@ -23,6 +23,8 @@ Basic Commands
 
 To start the application just build and run the docker local.yml image:
 
+::
+   
    $ docker-compose -f local.yml build
    $ docker-compose -f local.yml up
 
@@ -31,5 +33,7 @@ Running tests with py.test
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To run the tests:
+
+::
 
     $ docker-compose -f local.yml run --rm django pytest --reuse-db
